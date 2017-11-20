@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
+
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class ParserWikipedia {
 
-	public static String searchFromWikiData(String title) throws IOException{
+	public static Map<String,Object> searchWP(String title) throws IOException{
+		
 		String url = "https://www.wikipedia.org/w/api.php?action=query&titles=" + title + "_(disambiguation)&prop=links&format=json";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -18,7 +21,7 @@ public class ParserWikipedia {
 		con.setRequestMethod("GET");
 
 		int responseCode = con.getResponseCode();
-		System.out.println("recherche sur wikidata pour l'objet :" + title);
+		System.out.println("recherche sur Wikipedia pour l'objet :" + title);
 		System.out.println("Response Code : " + responseCode);
 
 		BufferedReader in = new BufferedReader(
@@ -34,12 +37,14 @@ public class ParserWikipedia {
 		ObjectMapper mapper = new ObjectMapper();
 		Object json = mapper.readValue(response.toString(), Object.class);
 		String res = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-		
-		return res;
+		Map<String,Object> map = mapper.readValue(res, Map.class);
+
+		return map;
 
 	}
 	
-	public static String getEntityFromWikiData(String id) throws IOException {
+	public static Map<String,Object> getContentWP(String id) throws IOException {
+		
 		String url = "https://www.wikipedia.org/w/api.php?action=query&titles=" + id + "&prop=revisions&rvprop=content&format=json";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -64,8 +69,9 @@ public class ParserWikipedia {
 		ObjectMapper mapper = new ObjectMapper();
 		Object json = mapper.readValue(response.toString(), Object.class);
 		String res = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+		Map<String,Object> map = mapper.readValue(res, Map.class);
 		
-		return res;
+		return map;
 
 	}
 

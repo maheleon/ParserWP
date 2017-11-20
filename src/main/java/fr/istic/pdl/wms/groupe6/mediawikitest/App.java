@@ -8,6 +8,6 @@ public class App
     {
     	ConfigFileWikipedia search = new ConfigFileWikipedia("en", "Colombia");
     	ParserWikipedia parser = new ParserWikipedia();
-    	System.out.println(parser.getEntityFromWikiData(search.getTitle()));
+    	System.out.println(parser.searchWP(search.getTitle()));
     }
 }
